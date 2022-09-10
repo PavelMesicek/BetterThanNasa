@@ -1,18 +1,19 @@
 package com.moonlight.betterthannasa.navigation
 
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.navArgument
-import com.moonlight.betterthannasa.presentation.screens.details.DetailsScreen
+import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.moonlight.betterthannasa.presentation.screens.home.HomeScreen
-import com.moonlight.betterthannasa.presentation.screens.map.MapScreen
 import com.moonlight.betterthannasa.presentation.screens.splash.SplashScreen
 import com.moonlight.betterthannasa.presentation.screens.welcome.WelcomeScreen
-import com.moonlight.betterthannasa.util.Constants.DETAILS_ARGUMENT_KEY
 
+@ExperimentalPermissionsApi
+@ExperimentalAnimationApi
+@ExperimentalPagerApi
 @Composable
 fun SetupNavGraph(navController: NavHostController) {
     NavHost(
@@ -27,17 +28,6 @@ fun SetupNavGraph(navController: NavHostController) {
         }
         composable(route = Screen.Home.route) {
             HomeScreen(navController = navController)
-        }
-        composable(route = Screen.Map.route) {
-            MapScreen(navController = navController)
-        }
-        composable(
-            route = Screen.Details.route,
-            arguments = listOf(navArgument(DETAILS_ARGUMENT_KEY) {
-                type = NavType.IntType
-            })
-        ) {
-            DetailsScreen(navController = navController)
         }
     }
 }

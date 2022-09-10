@@ -8,7 +8,10 @@ interface BetterThanNasaRepository {
 
     suspend fun getMeteorites(
         fetchFromRemote: Boolean,
-        latitude: Double,
-        longitude: Double
     ): Flow<Resource<List<Meteorite>>>
+
+    suspend fun saveOnBoardingState(completed: Boolean)
+
+    fun readOnBoardingState(): Flow<Boolean>
+
 }
