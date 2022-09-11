@@ -1,5 +1,6 @@
 package com.moonlight.betterthannasa.data.repository
 
+import android.app.Application
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
@@ -15,7 +16,6 @@ import com.moonlight.betterthannasa.domain.model.Meteorite
 import com.moonlight.betterthannasa.domain.repository.BetterThanNasaRepository
 import com.moonlight.betterthannasa.util.Constants
 import com.moonlight.betterthannasa.util.Resource
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
@@ -27,9 +27,9 @@ import javax.inject.Inject
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = Constants.PREFERENCES_NAME)
 
 class BetterThanNasaRepositoryImpl @Inject constructor(
-    @ApplicationContext context: Context,
+    application: Application,
     private val api: BetterThanNasaApi,
-    private val db: BetterThanNasaDatabase
+    db: BetterThanNasaDatabase
 ) : BetterThanNasaRepository {
 
     private val dao = db.dao()
@@ -38,7 +38,7 @@ class BetterThanNasaRepositoryImpl @Inject constructor(
         val onBoardingKey = booleanPreferencesKey(name = Constants.PREFERENCES_KEY)
     }
 
-    private val dataStore = context.dataStore
+    private val dataStore = application.dataStore
 
     override suspend fun saveOnBoardingState(completed: Boolean) {
         dataStore.edit { preferences ->

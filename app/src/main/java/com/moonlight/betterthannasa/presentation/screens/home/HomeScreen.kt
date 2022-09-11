@@ -11,7 +11,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.google.accompanist.swiperefresh.SwipeRefresh
@@ -20,7 +22,7 @@ import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.*
 import com.moonlight.betterthannasa.R
-import com.moonlight.betterthannasa.ui.theme.LARGE_PADDING
+import com.moonlight.betterthannasa.ui.theme.MEDIUM_PADDING
 
 @Composable
 fun HomeScreen(
@@ -28,17 +30,7 @@ fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val currentLocation = viewModel.currentLocation.collectAsState()
-    val currentLatLng = LatLng(
-        currentLocation.value.first(),
-        currentLocation.value.last()
-    )
-
-    val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(
-            currentLatLng,
-            10f
-        )
-    }
+    val currentLatLng = LatLng(currentLocation.value.first(), currentLocation.value.last())
 
     val swipeRefreshState = rememberSwipeRefreshState(
         isRefreshing = viewModel.state.value.isRefreshing
@@ -62,14 +54,22 @@ fun HomeScreen(
         }
     ) {
         if (viewModel.state.value.isMapVisible) {
-            if (viewModel.state.value.isLoading) {
-                Box(modifier = Modifier.fillMaxSize()) {
+            Box(modifier = Modifier.fillMaxSize()) {
+                if (viewModel.state.value.isLoading) {
                     CircularProgressIndicator(
                         modifier = Modifier.align(Alignment.Center)
                     )
-
+                }
+                viewModel.state.value.error?.let { error ->
+                    Text(
+                        text = error,
+                        color = Color.Red,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.align(Alignment.Center)
+                    )
                 }
             }
+
             SwipeRefresh(
                 state = swipeRefreshState,
                 onRefresh = {
@@ -82,7 +82,7 @@ fun HomeScreen(
                         Column(
                             modifier = Modifier
                                 .background(MaterialTheme.colors.surface)
-                                .padding(all = LARGE_PADDING)
+                                .padding(all = MEDIUM_PADDING)
                         ) {
                             MeteoriteItem(meteorite = meteorite)
                         }
@@ -90,6 +90,13 @@ fun HomeScreen(
                 }
             }
         } else {
+            val cameraPositionState = rememberCameraPositionState {
+                position = CameraPosition.fromLatLngZoom(
+                    currentLatLng,
+                    10f
+                )
+            }
+
             GoogleMap(
                 modifier = Modifier.fillMaxSize(),
                 cameraPositionState = cameraPositionState,
@@ -115,14 +122,8 @@ fun HomeScreen(
 }
 
 @Composable
-fun MeteoriteMarker(
-    position: LatLng,
-    title: String
-) {
-    val markerState = rememberMarkerState(
-        null,
-        position
-    )
+fun MeteoriteMarker(position: LatLng, title: String) {
+    val markerState = rememberMarkerState(null, position)
     Marker(
         state = markerState,
         title = title,

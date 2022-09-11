@@ -1,5 +1,7 @@
 package com.moonlight.betterthannasa.presentation.screens.home
 
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
@@ -7,15 +9,13 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.moonlight.betterthannasa.domain.model.Meteorite
-import com.moonlight.betterthannasa.ui.theme.LARGE_PADDING
 import com.moonlight.betterthannasa.R
-import com.moonlight.betterthannasa.ui.theme.DarkGray
-import com.moonlight.betterthannasa.ui.theme.INFO_ICON_SIZE
-import com.moonlight.betterthannasa.ui.theme.MEDIUM_PADDING
+import com.moonlight.betterthannasa.ui.theme.*
 import java.time.format.DateTimeFormatter
 
 @Composable
@@ -25,7 +25,8 @@ fun MeteoriteItem(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(bottom = LARGE_PADDING),
+            .padding(bottom = LARGE_PADDING)
+            .border(BorderStroke(2.dp, Color.DarkGray)),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
@@ -49,9 +50,7 @@ fun MeteoriteItem(
         )
     }
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(bottom = MEDIUM_PADDING),
+        modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         InfoBox(

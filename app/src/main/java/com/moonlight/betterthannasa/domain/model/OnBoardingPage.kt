@@ -18,12 +18,12 @@ sealed class OnBoardingPage(
     object  Second : OnBoardingPage(
         image = R.drawable.shock,
         title = "Find them all!",
-        description = "There are more than 45,000 recorded meteorites and you can find them all here!"
+        description = "In the sheet you can see all meteorites sorted since 2011!"
     )
 
     object  Third : OnBoardingPage(
         image = R.drawable.map,
         title = "Near me!",
-        description = "Don't forget to look at the map to see where the meteorite was closest to you."
+        description = "On the map you can see the nearest Meteorites around you! That's cool, right?"
     )
 }

@@ -3,8 +3,6 @@ package com.moonlight.betterthannasa.presentation.screens.home
 import android.location.Location
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.ui.input.key.Key.Companion.D
-import androidx.core.location.LocationManagerCompat.getCurrentLocation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.moonlight.betterthannasa.domain.location.LocationTracker
@@ -24,12 +22,7 @@ class HomeViewModel @Inject constructor(
     private val locationTracker: LocationTracker
 ) : ViewModel() {
 
-    private val _currentLocation = MutableStateFlow(
-        listOf(
-            0.0,
-            0.0
-        )
-    )
+    private val _currentLocation = MutableStateFlow(listOf(0.0, 0.0))
     val currentLocation: StateFlow<List<Double>> = _currentLocation
 
     private var _state = mutableStateOf(HomeState())
@@ -53,7 +46,7 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun getCurrentLocation() {
+    private fun getCurrentLocation() {
         viewModelScope.launch(Dispatchers.IO) {
             locationTracker.getCurrentLocation()
                 ?.let { location ->
@@ -65,7 +58,7 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun loaderMeteorites(fetchFromRemote: Boolean = false) {
+    private fun loaderMeteorites(fetchFromRemote: Boolean = false) {
         viewModelScope.launch {
             _state.value = state.value.copy(
                 isLoading = true,
@@ -99,24 +92,18 @@ class HomeViewModel @Inject constructor(
                                 }
                             }
                         }
-                }
+                } ?: kotlin.run {
+                _state.value = state.value.copy(
+                    isLoading = false,
+                    error = "Couldn't retrieve location. Make sure to grant permission and enable GPS."
+                )
+            }
         }
     }
 
-    fun calculateDistance(
-        lat1: Double,
-        lng1: Double,
-        lat2: Double,
-        lng2: Double
-    ): Float {
+    private fun calculateDistance(lat1: Double, lng1: Double, lat2: Double, lng2: Double): Float {
         val results = FloatArray(1)
-        Location.distanceBetween(
-            lat1,
-            lng1,
-            lat2,
-            lng2,
-            results
-        )
+        Location.distanceBetween(lat1, lng1, lat2, lng2, results)
         return results[0]
     }
 }

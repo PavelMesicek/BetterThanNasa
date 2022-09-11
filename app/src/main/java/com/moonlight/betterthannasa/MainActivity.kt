@@ -2,6 +2,7 @@ package com.moonlight.betterthannasa
 
 import android.Manifest
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultLauncher
@@ -23,7 +24,6 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    private val viewModel: HomeViewModel by viewModels()
     private lateinit var navController: NavHostController
     private lateinit var permissionLauncher: ActivityResultLauncher<Array<String>>
 
@@ -32,7 +32,7 @@ class MainActivity : ComponentActivity() {
         permissionLauncher = registerForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions()
         ) {
-            viewModel.loaderMeteorites(true)
+            Log.d("Permission", "Permission Granted")
         }
         permissionLauncher.launch(arrayOf(
             Manifest.permission.ACCESS_FINE_LOCATION,
